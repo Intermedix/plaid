@@ -1,0 +1,187 @@
+/**
+ * Copyright 2013 Intermedix Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS
+ * IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/*--------------------------------------------------------------
+--------------------- P L A I D - G R I D ----------------------
+----------------------------------------------------------------*/
+
+/* Tailorable configuration. Flatter your layout.
+----------------------------------------------------------------*/
+@grid-columns: 12;
+@grid-column-width: 60;
+@grid-gutter-width: 20;
+
+/* Base row class.
+----------------------------------------------------------------*/
+.grid-row {
+	clear: left;
+	display: block;
+	zoom: 1; // Trigger hasLayout for IE 7.
+
+	.grid-row-with-gutter {
+		.column-gutter();
+	}
+	[class *= "col-"] {
+		float: left;
+	}
+	&:after,
+	&:before {
+		content: '';
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+
+	.first-last-margins();
+
+	// Begin recursive calls.
+	.col-X(@grid-columns, @grid-columns); // Begin recursive column calls.
+	.skip-X(@grid-columns, @grid-columns);
+}
+
+/* Basic column mixins.
+----------------------------------------------------------------*/
+.column (@sub-columns: 1, @columns: @grid-columns,
+	@position: 'middle') when (@sub-columns > 0) {
+	.column-gutter(@sub-columns, @columns, @position);
+	.column-width(@sub-columns, @columns);
+	.first-last-margins();
+
+	.sub-col-X(@sub-columns, @sub-columns);
+	.skip-X(@sub-columns, @sub-columns); // Begin recursive calls.
+}
+.sub-column (@sub-columns, @columns) when (@sub-columns > 0) {
+	.column-gutter(@sub-columns, @columns);
+	.column-width(@sub-columns, @columns);
+}
+.column-gutter (@sub-columns: 1, @columns: @grid-columns,
+	@position: 'middle') {
+	@local-width: (@columns * @grid-column-width) + ((@columns - 1) *
+		@grid-gutter-width);
+	@gutter-width: (@grid-gutter-width / @local-width);
+	.column-gutter-margin(@gutter-width, @position);
+}
+.column-gutter-margin (@gutter-width, @position) when (@position = 'first') {
+	margin-left: 0;
+	margin-right: percentage(@gutter-width / 2);
+	*margin-right: percentage(floor(@gutter-width / 2 * 1000) / 1000);
+}
+.column-gutter-margin (@gutter-width, @position) when (@position = 'middle') {
+	@margin: percentage(@gutter-width / 2);
+	margin-left: @margin;
+	margin-right: @margin;
+
+	@margin-rounded: percentage(floor(@gutter-width / 2 * 1000) / 1000);
+	*margin-left: @margin-rounded;
+	*margin-right: @margin-rounded;
+}
+.column-gutter-margin (@gutter-width, @position) when (@position = 'last') {
+	margin-left: percentage(@gutter-width / 2);
+	*margin-left: percentage(floor(@gutter-width / 2 * 1000) / 1000);
+}
+.column-width (@sub-columns: 1, @columns: @grid-columns) {
+	@local-width: (@columns * @grid-column-width) + ((@columns - 1) *
+		@grid-gutter-width);
+	@column-width: (@sub-columns * @grid-column-width);
+	@gutter-width: (@sub-columns - 1) * @grid-gutter-width;
+	width: percentage((@column-width + @gutter-width) / @local-width);
+
+	@column-width-rounded: percentage(floor((@column-width + @gutter-width) /
+		@local-width * 1000) / 1000);
+	*width: @column-width-rounded;
+}
+.first-last-margins () {
+	&[class *= "col-"]:first-child {
+		margin-left: 0;
+	}
+	&[class *= "col-"]:last-child {
+		margin-right: 0;
+	}
+	// Support for browsers without last-child implemented.
+	&.last-col {
+		margin-right: 0;
+	}
+}
+
+/* Recursive functions for columns and sub-columns.
+----------------------------------------------------------------*/
+.col-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
+	(~".col-@{sub-column-index}") {
+		.column(@sub-column-index, @columns);
+	}
+
+	.col-X(@sub-column-index - 1, @columns);
+}
+.col-X (@sub-column-index, @columns) when (@sub-column-index = 0) {}
+
+.sub-col-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
+	(~".col-@{sub-column-index}") {
+		.sub-column(@sub-column-index, @columns);
+	}
+
+	.sub-col-X(@sub-column-index - 1, @columns);
+}
+.sub-col-X (@sub-column-index, @columns) when (@sub-column-index = 0) {}
+
+.skip-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
+	@local-width: (@columns * @grid-column-width) + ((@columns - 1) *
+		@grid-gutter-width);
+	@grid-column-width-gutter-width: @grid-column-width + @grid-gutter-width;
+
+	(~'[class ~= "skip-@{sub-column-index}"]') {
+		margin-left: percentage((@sub-column-index *
+			@grid-column-width-gutter-width + (@grid-gutter-width / 2)) /
+			@local-width);
+	}
+
+	(~'[class *= "col-"]:first-child[class ~= "skip-@{sub-column-index}"]') {
+		margin-left: percentage(@sub-column-index *
+			@grid-column-width-gutter-width / @local-width);
+	}
+
+	.skip-X(@sub-column-index - 1, @columns);
+}
+.skip-X (@sub-column-index, @columns) when (@sub-column-index = 0) {}
+
+/* Mixins to apply styles while testing.
+----------------------------------------------------------------*/
+.grid-test .grid-row {
+	margin-top: 10px;
+
+	[class *= "col-"] {
+		border-radius: 3px;
+		color: #fff;
+		line-height: 8px;
+		padding: 10px 0;
+		text-align: center;
+	}
+
+	.marker {
+		line-height: 28px;
+	}
+
+	.col-color-X(@grid-columns, @grid-columns);
+}
+
+.col-color-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
+	(~".col-@{sub-column-index}") {
+		background-color: #0069aa * @sub-column-index / (@columns / 1.5);
+	}
+
+	.col-color-X(@sub-column-index - 1, @columns);
+}
+.col-color-X (@sub-column-index, @columns) when (@sub-column-index = 0) {}
