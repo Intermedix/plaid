@@ -61,13 +61,12 @@ In this example, we're overriding the default column width for
 4 columns, based on the global grid width, essentially doubling
 their width to adapt to a narrowing screen.
 
-  @media screen and (max-width: 500px) {
-    footer .suit-footer-content {
-      .col-2 {
-        .column (4, @grid-columns);
-      }
+    @media screen and (max-width: 500px) {
+        .col-2 {
+            .column (4, @grid-columns);
+        }
     }
-  }
+
 
 # License
 
