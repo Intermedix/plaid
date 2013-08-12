@@ -120,7 +120,7 @@
 /* Recursive functions for columns and sub-columns.
 ----------------------------------------------------------------*/
 .col-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
-	(~".col-@{sub-column-index}") {
+	.col-@{sub-column-index} {
 		.column(@sub-column-index, @columns);
 	}
 
@@ -129,7 +129,7 @@
 .col-X (@sub-column-index, @columns) when (@sub-column-index = 0) {}
 
 .sub-col-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
-	(~".col-@{sub-column-index}") {
+	.col-@{sub-column-index} {
 		.sub-column(@sub-column-index, @columns);
 	}
 
@@ -142,13 +142,13 @@
 		@grid-gutter-width);
 	@grid-column-width-gutter-width: @grid-column-width + @grid-gutter-width;
 
-	(~'[class ~= "skip-@{sub-column-index}"]') {
+	[class ~= "skip-@{sub-column-index}"] {
 		margin-left: percentage((@sub-column-index *
 			@grid-column-width-gutter-width + (@grid-gutter-width / 2)) /
 			@local-width);
 	}
 
-	(~'[class *= "col-"]:first-child[class ~= "skip-@{sub-column-index}"]') {
+	[class *= "col-"]:first-child[class ~= "skip-@{sub-column-index}"] {
 		margin-left: percentage(@sub-column-index *
 			@grid-column-width-gutter-width / @local-width);
 	}
@@ -178,7 +178,7 @@
 }
 
 .col-color-X (@sub-column-index, @columns) when (@sub-column-index > 0) {
-	(~".col-@{sub-column-index}") {
+	.col-@{sub-column-index} {
 		background-color: #0069aa * @sub-column-index / (@columns / 1.5);
 	}
 
