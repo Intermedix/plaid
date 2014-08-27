@@ -142,13 +142,13 @@
 		@grid-gutter-width);
 	@grid-column-width-gutter-width: @grid-column-width + @grid-gutter-width;
 
-	(~'[class ~= "skip-@{sub-column-index}"]') {
+	[class ~= "skip-@{sub-column-index}"] {
 		margin-left: percentage((@sub-column-index *
 			@grid-column-width-gutter-width + (@grid-gutter-width / 2)) /
 			@local-width);
 	}
 
-	(~'[class *= "col-"]:first-child[class ~= "skip-@{sub-column-index}"]') {
+	[class *= "col-"]:first-child[class ~= "skip-@{sub-column-index}"] {
 		margin-left: percentage(@sub-column-index *
 			@grid-column-width-gutter-width / @local-width);
 	}
