@@ -1,0 +1,26 @@
+{
+  "name": "plaid",
+  "version": "0.0.1",
+  "description": "An infinitely nest-able, responsive-ready, tailorable fluid grid system, powered by LESS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "lessc plaid.less | tee plaid.css",
+    "start": "head -15 plaid.less > plaid.min.css; lessc -x plaid.less | tee -a plaid.min.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Intermedix/plaid"
+  },
+  "keywords": [
+    "less",
+    "css"
+  ],
+  "author": "Nathaniel Buck <nathaniel.buck@intermedix.com>",
+  "license": "Apache v2.0",
+  "bugs": {
+    "url": "https://github.com/Intermedix/plaid/issues"
+  },
+  "devDependencies": {
+    "less": "~1.7.4"
+  }
+}

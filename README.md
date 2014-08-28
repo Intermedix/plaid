@@ -68,6 +68,19 @@ their width to adapt to a narrowing screen.
         }
     }
 
+# Generating
+
+Make sure that you have the less compiler installed locally with:
+
+    npm install
+
+To generate un-minified CSS:
+
+    npm test
+
+To generate minified CSS:
+
+    npm start
 
 # License
 
